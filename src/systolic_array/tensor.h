@@ -138,6 +138,15 @@ class TensorIndexIterator {
 
   bool end() const { return atEnd; }
 
+  TensorIndexIterator(const TensorIndexIterator& other) {
+    state = other.state;
+    dims = other.dims;
+    effecDims = other.effecDims;
+    padding = other.padding;
+    halo = other.halo;
+    atEnd = other.atEnd;
+  }
+
   void operator=(const TensorIndexIterator& other) {
     state = other.state;
     dims = other.dims;

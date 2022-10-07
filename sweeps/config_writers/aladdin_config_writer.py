@@ -1,5 +1,6 @@
 # Writes JSON design sweep dumps as Aladdin config files.
 
+from __future__ import unicode_literals
 from io import StringIO
 import os
 

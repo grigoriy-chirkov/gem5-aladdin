@@ -25,6 +25,8 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# TODO: check copy operators for all classes
+
 from collections import OrderedDict
 
 from slicc.util import PairContainer
@@ -256,6 +258,23 @@ $klass ${{self.c_ident}}$parent
             for dm in self.data_members.values():
                 code('m_${{dm.ident}} = other.m_${{dm.ident}};')
 
+            code.dedent()
+            code('}')
+
+        # ******** Copy operator ********
+        if not self.isGlobal:
+            code('${{self.c_ident}}& operator=(const ${{self.c_ident}}&other)')
+
+            # Call superclass constructor
+            # if "interface" in self:
+            #     code('    : ${{self["interface"]}}(other)')
+
+            code('{')
+            code.indent()
+
+            for dm in self.data_members.values():
+                code('m_${{dm.ident}} = other.m_${{dm.ident}};')
+            code('return *this;')
             code.dedent()
             code('}')
 

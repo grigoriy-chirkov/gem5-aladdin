@@ -94,6 +94,32 @@ class InstResult {
     explicit InstResult(const VecPredRegContainer& v, const ResultType& t)
         : type(t) { result.pred = v; }
 
+    InstResult(const InstResult& that) {
+        type = that.type;
+        switch (type) {
+        /* Given that misc regs are not written to, there may be invalids in
+         * the result stack. */
+        case ResultType::Invalid:
+            break;
+        case ResultType::Scalar:
+            result.integer = that.result.integer;
+            break;
+        case ResultType::VecElem:
+            result.vecElem = that.result.vecElem;
+            break;
+        case ResultType::VecReg:
+            result.vector = that.result.vector;
+            break;
+        case ResultType::VecPredReg:
+            result.pred = that.result.pred;
+            break;
+
+        default:
+            panic("Assigning result from unknown result type");
+            break;
+        }
+    }
+
     InstResult& operator=(const InstResult& that) {
         type = that.type;
         switch (type) {

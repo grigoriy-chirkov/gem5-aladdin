@@ -241,7 +241,7 @@ class SystolicArray : public Gem5Datapath {
   void processTick();
 
   void notifyDone() {
-    assert(state = WaitingForCompute);
+    assert(state == WaitingForCompute);
     dataflow->stop();
     if (sendResults)
       state = ReadyForDmaWrite;

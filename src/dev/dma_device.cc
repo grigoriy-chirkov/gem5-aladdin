@@ -76,7 +76,7 @@ DmaPort::DmaPort(ClockedObject *dev, System *s, unsigned max_req,
 
 DmaPort::DmaPort(ClockedObject *dev, System *s, uint32_t sid, uint32_t ssid)
     : DmaPort(
-          dev, s, MAX_DMA_REQUEST, sys->cacheLineSize(), 1, false, sid, ssid) {}
+          dev, s, MAX_DMA_REQUEST, s->cacheLineSize(), 1, false, sid, ssid) {}
 
 void
 DmaPort::handleResp(PacketPtr pkt, Tick delay)

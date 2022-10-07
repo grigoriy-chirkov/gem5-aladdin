@@ -428,7 +428,15 @@ if main['GCC'] or main['CLANG']:
         main.Append(CCFLAGS=['-I/usr/local/include'])
         main.Append(CXXFLAGS=['-I/usr/local/include'])
 
+    main.Append(CCFLAGS=['-Wno-array-bounds'])
+    main.Append(CXXFLAGS=['-Wno-array-bounds'])
+    main.Append(CCFLAGS=['-Wno-stringop-overflow'])
+    main.Append(CXXFLAGS=['-Wno-stringop-overflow'])
+    main.Append(CCFLAGS=['-Wno-uninitialized'])
+    main.Append(CXXFLAGS=['-Wno-uninitialized'])
+
     main.Append(LINKFLAGS='-Wl,--as-needed')
+    main.Append(LINKFLAGS='-Wl,-L/home/gchirkov/.conda/envs/aladdin/lib')
     main['FILTER_PSHLINKFLAGS'] = lambda x: str(x).replace(' -shared', '')
     main['PSHLINKFLAGS'] = main.subst('${FILTER_PSHLINKFLAGS(SHLINKFLAGS)}')
     if GetOption('gold_linker'):

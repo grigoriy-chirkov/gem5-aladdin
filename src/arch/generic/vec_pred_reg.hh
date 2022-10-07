@@ -249,6 +249,11 @@ class VecPredRegContainer
   public:
     VecPredRegContainer() {}
 
+    VecPredRegContainer<NumBits, Packed>(const MyClass& that)
+    {
+        container = that.container;
+    }
+
     MyClass&
     operator=(const MyClass& that)
     {

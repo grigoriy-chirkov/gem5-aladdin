@@ -294,6 +294,13 @@ class VecRegContainer
     /** Zero the container. */
     void zero() { memset(container.data(), 0, SIZE); }
 
+    /** Copy constructor. */
+    VecRegContainer<Sz>(const MyClass& that)
+    {
+        memcpy(container.data(), that.container.data(), SIZE);
+        // return *this;
+    }
+
     /** Assignment operators. */
     /** @{ */
     /** From VecRegContainer */

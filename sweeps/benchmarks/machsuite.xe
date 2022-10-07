@@ -6,14 +6,14 @@ begin Gem5DesignSweep single
 use benchmarks.machsuite.*
 
 generate configs
-generate dma_trace
+generate trace
 generate gem5_binary
 
 # Set parameters.
 set output_dir "machsuite" # A comment
 set source_dir "../src/aladdin/MachSuite"
 set simulator "gem5-cpu"
-set memory_type "spad"
+set memory_type "cache"
 
 # Only sweep this variable.
 sweep cycle_time from 1 to 5

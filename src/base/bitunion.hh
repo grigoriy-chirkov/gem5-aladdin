@@ -123,6 +123,10 @@ class BitfieldType : public BitfieldTypeImpl<Base>
     {
         return Impl::operator=(other);
     }
+    BitfieldType<Base>(const BitfieldType<Base>& other) {
+        *this = other;
+    }
+    BitfieldType<Base>() = default;
 };
 
 //A wrapper which only supports getting.
@@ -249,6 +253,11 @@ namespace BitfieldBackend
         operator const typename Base::__StorageType () const
         {
             return Base::__storage;
+        }
+
+        BitUnionOperators(BitUnionOperators const &other)
+        {
+            Base::__storage = other;
         }
 
         typename Base::__StorageType
