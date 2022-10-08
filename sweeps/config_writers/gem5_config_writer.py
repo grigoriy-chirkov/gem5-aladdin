@@ -261,6 +261,7 @@ class Gem5ConfigWriter(config_writer.JsonConfigWriter):
     stderr_path = os.path.join(output_dir, "stderr")
     l2cache_flag = "--l2cache" if benchmark["enable_l2"] else ""
     perfect_bus_flag = "--is_perfect_bus=1 " if benchmark["perfect_bus"] else ""
+    ruby_flag = "--ruby" if benchmark["enable_ruby"] else ""
     if benchmark["perfect_l1"]:
       mem_flag = "--mem-latency=0ns --mem-type=simple_mem "
       perfect_l1_flag = "--is_perfect_cache=1 --is_perfect_bus=1"
@@ -291,6 +292,7 @@ class Gem5ConfigWriter(config_writer.JsonConfigWriter):
           "--cpu-type=DerivO3CPU ",
           "--caches",
           l2cache_flag,
+          ruby_flag,
           "--cacheline_size=%d " % benchmark["cache_line_sz"],
           perfect_l1_flag,
           perfect_bus_flag,

@@ -28,6 +28,7 @@ class Benchmark(Sweepable):
       params.ready_mode,
       params.dma_multi_channel,
       params.ignore_cache_flush,
+      params.enable_ruby,
   ]
 
   def __init__(self, name, source_dir):
