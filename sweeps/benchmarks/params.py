@@ -62,6 +62,7 @@ perfect_l1 = IntParam("perfect_l1", 0)
 perfect_bus = IntParam("perfect_bus", 0)
 enable_l2 = IntParam("enable_l2", 0)
 enable_ruby = IntParam("enable_ruby", 0)
+link_latency = IntParam("link_latency", 1)
 
 # DMA settings.
 dma_setup_overhead = IntParam("dma_setup_overhead", 30)

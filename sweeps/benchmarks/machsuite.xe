@@ -17,7 +17,8 @@ set memory_type "cache"
 
 # Only sweep this variable.
 # sweep cycle_time from 1 to 5
-sweep enable_ruby from 0 to 1
+set enable_ruby 1
+sweep link_latency from 1 to 5
 
 source "machsuite_constants.xe"
 

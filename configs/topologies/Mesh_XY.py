@@ -55,7 +55,8 @@ class Mesh_XY(SimpleTopology):
     def makeTopology(self, options, network, IntLink, ExtLink, Router):
         nodes = self.nodes
 
-        num_routers = options.num_cpus
+        # num_routers = options.num_cpus
+        num_routers = options.num_cpus + options.num_accel
         num_rows = options.mesh_rows
 
         # default values for link latency and router latency.
@@ -92,7 +93,8 @@ class Mesh_XY(SimpleTopology):
         # Connect each node to the appropriate router
         ext_links = []
         for (i, n) in enumerate(network_nodes):
-            cntrl_level, router_id = divmod(i, num_routers)
+            # cntrl_level, router_id = divmod(i, num_routers)
+            router_id, cntrl_level = divmod(i, cntrls_per_router)
             assert(cntrl_level < cntrls_per_router)
             ext_links.append(ExtLink(link_id=link_count, ext_node=n,
                                     int_node=routers[router_id],
@@ -102,7 +104,7 @@ class Mesh_XY(SimpleTopology):
         # Connect the remainding nodes to router 0.  These should only be
         # DMA nodes.
         for (i, node) in enumerate(remainder_nodes):
-            assert(node.type == 'DMA_Controller')
+            # assert(node.type == 'DMA_Controller')
             assert(i < remainder)
             ext_links.append(ExtLink(link_id=link_count, ext_node=node,
                                     int_node=routers[0],

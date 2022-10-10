@@ -254,14 +254,15 @@ class Gem5ConfigWriter(config_writer.JsonConfigWriter):
     output_dir = os.path.join(sweep_dir, "outputs")
     runscript_path = os.path.join(sweep_dir, "run.sh")
     gem5_cfg_path = os.path.join(sweep_dir, "gem5.cfg")
-    aladdin_script = os.path.join(GEM5_HOME, "configs", "aladdin", "aladdin_se.py")
+    aladdin_script = os.path.join(GEM5_HOME, "configs", "aladdin", "rosetta.py")
     num_cpus = 1 if sweep["simulator"] == "gem5-cpu" else 0
     sys_clock = self.getSysClock(benchmark)
     stdout_path = os.path.join(output_dir, "stdout")
     stderr_path = os.path.join(output_dir, "stderr")
     l2cache_flag = "--l2cache" if benchmark["enable_l2"] else ""
     perfect_bus_flag = "--is_perfect_bus=1 " if benchmark["perfect_bus"] else ""
-    ruby_flag = "--ruby" if benchmark["enable_ruby"] else ""
+    ruby_flag = "--ruby \\\n--topology=Mesh_XY \\\n--mesh-rows=1" if benchmark["enable_ruby"] else ""
+    link_latency = "--link-latency=%d" % benchmark["link_latency"] if benchmark["enable_ruby"] else ""
     if benchmark["perfect_l1"]:
       mem_flag = "--mem-latency=0ns --mem-type=simple_mem "
       perfect_l1_flag = "--is_perfect_cache=1 --is_perfect_bus=1"
@@ -293,6 +294,7 @@ class Gem5ConfigWriter(config_writer.JsonConfigWriter):
           "--caches",
           l2cache_flag,
           ruby_flag,
+          link_latency,
           "--cacheline_size=%d " % benchmark["cache_line_sz"],
           perfect_l1_flag,
           perfect_bus_flag,
