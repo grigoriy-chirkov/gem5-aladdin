@@ -99,18 +99,18 @@ def install_style_hooks(env):
     if hook_exists("pre-commit") and hook_exists("commit-msg"):
         return
 
-    print(git_style_message, end=' ')
-    try:
-        raw_input()
-    except:
-        print("Input exception, exiting scons.\n")
-        sys.exit(1)
+    # print(git_style_message, end=' ')
+    # try:
+    #     raw_input()
+    # except:
+    #     print("Input exception, exiting scons.\n")
+    #     sys.exit(1)
 
-    git_style_script = env.root.Dir("util").File("git-pre-commit.py")
-    git_msg_script = env.root.Dir("ext").File("git-commit-msg")
+    # git_style_script = env.root.Dir("util").File("git-pre-commit.py")
+    # git_msg_script = env.root.Dir("ext").File("git-commit-msg")
 
-    hook_install("pre-commit", git_style_script)
-    hook_install("commit-msg", git_msg_script)
+    # hook_install("pre-commit", git_style_script)
+    # hook_install("commit-msg", git_msg_script)
 
 def generate(env):
     if exists(env) and not gem5_scons.util.ignore_style():

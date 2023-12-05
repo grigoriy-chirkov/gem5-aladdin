@@ -95,6 +95,7 @@
 #include "base/logging.hh"
 #include "base/trace.hh"
 #include "base/types.hh"
+#include "base/random.hh"
 #include "config/the_isa.hh"
 #include "cpu/base.hh"
 #include "cpu/thread_context.hh"
@@ -2937,6 +2938,25 @@ eventfdFunc(SyscallDesc *desc, int num, ThreadContext *tc)
     warnUnsupportedOS("eventfd");
     return -1;
 #endif
+}
+
+template <typename OS>
+SyscallReturn
+getrandomFunc(SyscallDesc *desc, int num, ThreadContext *tc)
+{
+    int index = 0;
+    auto p = tc->getProcessPtr();
+    Addr buf_ptr = p->getSyscallArg(tc, index);
+    int nbytes = p->getSyscallArg(tc, index);
+    // int in_flags = p->getSyscallArg(tc, index);
+
+    BufferArg buf_arg(buf_ptr, nbytes);
+    for (int i = 0; i < nbytes; ++i) {
+        ((uint8_t*)buf_arg.bufferPtr())[i] = random_mt.random<uint8_t>();
+    }
+    buf_arg.copyOut(tc->getVirtProxy());
+
+    return nbytes;
 }
 
 #endif // __SIM_SYSCALL_EMUL_HH__

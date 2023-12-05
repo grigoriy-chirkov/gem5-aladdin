@@ -259,26 +259,57 @@ class Gem5ConfigWriter(config_writer.JsonConfigWriter):
     sys_clock = self.getSysClock(benchmark)
     stdout_path = os.path.join(output_dir, "stdout")
     stderr_path = os.path.join(output_dir, "stderr")
-    l2cache_flag = "--l2cache" if benchmark["enable_l2"] else ""
+    index = os.path.basename(sweep_dir).encode()
     perfect_bus_flag = "--is_perfect_bus=1 " if benchmark["perfect_bus"] else ""
-    ruby_flag = "--ruby \\\n--topology=Mesh_XY \\\n--mesh-rows=1" if benchmark["enable_ruby"] else ""
-    link_latency = "--link-latency=%d" % benchmark["link_latency"] if benchmark["enable_ruby"] else ""
+    link_latency = "--link-latency=%d" % benchmark["link_latency"]
+    l0d_size = "--l0d_size=%d" % benchmark["l0d_size"]
+    l0d_assoc = "--l0d_assoc=%d" % benchmark["l0d_assoc"]
+    l0d_hit_latency = "--l0d_hit_latency=%d" % benchmark["l0d_hit_latency"]
+    l0i_size = "--l0d_size=%d" % benchmark["l0i_size"]
+    l0i_assoc = "--l0d_assoc=%d" % benchmark["l0i_assoc"]
+    l0i_hit_latency = "--l0d_hit_latency=%d" % benchmark["l0i_hit_latency"]
+    l1d_size = "--l1d_size=%d" % benchmark["l1d_size"]
+    l1d_assoc = "--l1d_assoc=%d" % benchmark["l1d_assoc"]
+    l1d_hit_latency = "--l1d_hit_latency=%d" % benchmark["l1d_hit_latency"]
+    l2_size = "--l2_size=%d" % benchmark["l2_size"]
+    l2_assoc = "--l2_assoc=%d" % benchmark["l2_assoc"]
+    l2_hit_latency = "--l2_hit_latency=%d" % benchmark["l2_hit_latency"]
+    link_width_bits = "--link-width-bits=%d" % benchmark["link_width_bits"]
     if benchmark["perfect_l1"]:
       mem_flag = "--mem-latency=0ns --mem-type=simple_mem "
       perfect_l1_flag = "--is_perfect_cache=1 --is_perfect_bus=1"
     else:
-      mem_flag = "--mem-type=DDR3_1600_8x8 "
+      mem_flag = "--mem-type=DDR4_2400_16x4 "
       perfect_l1_flag = ""
 
     if benchmark["exec_cmd"]:
-      exec_cmd = "-c {0} -o \"{1}\"".format(
-          benchmark["exec_cmd"], benchmark["run_args"])
+      if benchmark["cpu_only"]:
+        exec_cmd = "-c {0} -o \"{1}\"".format(
+            benchmark["exec_cmd"][:-6], benchmark["run_args"])
+      else:
+        exec_cmd = "-c {0} -o \"{1}\"".format(
+            benchmark["exec_cmd"], benchmark["run_args"])
     else:
       exec_cmd = ""
 
     with open(runscript_path, "w") as f:
       lines = [
-          "#!/bin/sh",
+          "#!/bin/bash", 
+          "",
+          "#SBATCH --job-name=%s:%s" % (benchmark["name"], index),
+          "#SBATCH --time=23:59:58",
+          "#SBATCH --mem=8G",
+          "#SBATCH --cpus-per-task=2",
+          "#SBATCH --output=%s" % os.path.join(output_dir, "slurm.out"),
+          "",
+          "if [ \"$SLURM_JOB_USER\" ]; then source %s/env.sh; export LD_LIBRARY_PATH=/home/gchirkov/.conda/envs/aladdin/lib:$LD_LIBRARY_PATH; fi" % GEM5_HOME,
+          "cd %s" % sweep_dir,
+          "",
+          "",
+      ]
+      f.write(" \n".join(lines))
+
+      lines = [
           GEM5_PATH,
           "--stats-db-file=stats.db",
           "--outdir=" + output_dir,
@@ -290,12 +321,23 @@ class Gem5ConfigWriter(config_writer.JsonConfigWriter):
           "--prefetcher-type=stride",
           mem_flag,
           "--sys-clock=" + sys_clock,
+          "--cpu-clock=2500MHz",
           "--cpu-type=DerivO3CPU ",
-          "--caches",
-          l2cache_flag,
-          ruby_flag,
+
+          "--ruby",
+          "--topology=Mesh_XY",
+          "--mesh-rows=1",
+          "--routing-algorithm=1",
           link_latency,
+          link_width_bits,
+
+          "--caches",
           "--cacheline_size=%d " % benchmark["cache_line_sz"],
+          l0d_size, l0d_assoc, l0d_hit_latency,
+          l0i_size, l0i_assoc, l0i_hit_latency,
+          l1d_size, l1d_assoc, l1d_hit_latency,
+          l2_size,  l2_assoc, l2_hit_latency,
+
           perfect_l1_flag,
           perfect_bus_flag,
           "--accel_cfg_file=" + gem5_cfg_path,
@@ -304,12 +346,13 @@ class Gem5ConfigWriter(config_writer.JsonConfigWriter):
           "2> " + stderr_path,
       ]
       f.write(" \\\n".join(lines))
+    os.chmod(runscript_path, 0755)
 
   def getSysClock(self, benchmark):
     """ Convert cycle time into MHz. """
     clock_period = float(benchmark["cycle_time"]) * 1e-9
     freq = 1.0/clock_period
-    mhz = freq / 1e6
+    mhz = round(freq / 1e6)
     return "%dMHz" % mhz
 
   def shortToLongSize(self, size_str):

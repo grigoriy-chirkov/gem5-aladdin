@@ -163,8 +163,8 @@ def create_system(options, full_system, system, dma_ports, bootmem,
 
             # Connect the L0 and L1 controllers
             l0_cntrl.mandatoryQueue = MessageBuffer()
-            l0_cntrl.bufferToL1 = MessageBuffer(ordered = True)
-            l1_cntrl.bufferFromL0 = l0_cntrl.bufferToL1
+            l1_cntrl.bufferFromL0 = MessageBuffer(ordered = True)
+            l0_cntrl.bufferToL1 = l1_cntrl.bufferFromL0
             l0_cntrl.bufferFromL1 = MessageBuffer(ordered = True)
             l1_cntrl.bufferToL0 = l0_cntrl.bufferFromL1
 
@@ -230,6 +230,8 @@ def create_system(options, full_system, system, dma_ports, bootmem,
         dir_cntrl.requestToDir.slave = ruby_system.network.master
         dir_cntrl.responseToDir = MessageBuffer()
         dir_cntrl.responseToDir.slave = ruby_system.network.master
+        dir_cntrl.requestFromDir = MessageBuffer()
+        dir_cntrl.requestFromDir.master = ruby_system.network.slave
         dir_cntrl.responseFromDir = MessageBuffer()
         dir_cntrl.responseFromDir.master = ruby_system.network.slave
         dir_cntrl.responseFromMemory = MessageBuffer()

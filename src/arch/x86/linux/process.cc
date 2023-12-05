@@ -576,6 +576,12 @@ static SyscallDesc syscallDescs64[] = {
     /* 311 */ SyscallDesc("proess_vm_writev", unimplementedFunc),
     /* 312 */ SyscallDesc("kcmp", unimplementedFunc),
     /* 313 */ SyscallDesc("finit_module", unimplementedFunc),
+    /* 314 */ SyscallDesc("314", unimplementedFunc),
+    /* 315 */ SyscallDesc("315", unimplementedFunc),
+    /* 316 */ SyscallDesc("316", unimplementedFunc),
+    /* 317 */ SyscallDesc("317", unimplementedFunc),
+    /* 318 */ SyscallDesc("getrandom", getrandomFunc<X86Linux64>),
+    /* 319 */ SyscallDesc("319", unimplementedFunc),
 };
 
 X86_64LinuxProcess::X86_64LinuxProcess(ProcessParams * params,

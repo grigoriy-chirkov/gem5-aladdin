@@ -50,3 +50,7 @@ class Gem5DesignSweep(ExhaustiveSweep):
   def generate_gem5_binary(self):
     generator = gem5_binary_generator.Gem5BinaryGenerator(self)
     return generator.run()
+
+  def generate_run(self):
+    generator = run_generator.RunGenerator(self)
+    return generator.run()

@@ -20,16 +20,27 @@ class Benchmark(Sweepable):
       params.tlb_max_outstanding_walks,
       params.tlb_assoc,
       params.tlb_bandwidth,
-      params.l2cache_size,
-      params.enable_l2,
       params.perfect_l1,
       params.perfect_bus,
       params.pipelined_dma,
       params.ready_mode,
       params.dma_multi_channel,
       params.ignore_cache_flush,
-      params.enable_ruby,
       params.link_latency,
+      params.link_width_bits,
+      params.l0d_size, 
+      params.l0d_assoc, 
+      params.l0d_hit_latency,
+      params.l0i_size, 
+      params.l0i_assoc,
+      params.l0i_hit_latency,
+      params.l1d_size,
+      params.l1d_assoc,
+      params.l1d_hit_latency,
+      params.l2_size, 
+      params.l2_assoc,
+      params.l2_hit_latency,
+      params.cpu_only,
   ]
 
   def __init__(self, name, source_dir):
@@ -39,7 +50,6 @@ class Benchmark(Sweepable):
     self.main_id = 0
     self.exec_cmd = ""
     self.run_args = ""
-    self.exec_cmd = ""
     self.required_files = []
 
   def add_array(self, *args):

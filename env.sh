@@ -1,3 +1,5 @@
+#!/bin/bash
+
 module load gcc-toolset/10
 module load anaconda3/2022.5
 

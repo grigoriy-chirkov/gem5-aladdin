@@ -56,7 +56,10 @@ class Mesh_XY(SimpleTopology):
         nodes = self.nodes
 
         # num_routers = options.num_cpus
-        num_routers = options.num_cpus + options.num_accel
+        try: 
+            num_routers = options.num_cpus + options.num_accel
+        except AttributeError:
+            num_routers = options.num_cpus
         num_rows = options.mesh_rows
 
         # default values for link latency and router latency.

@@ -41,6 +41,7 @@ all_protocols.extend([
     'MESI_Two_Level',
     'MESI_Two_Level_aladdin',
     'MESI_Three_Level',
+    'MESI_Three_Level_aladdin',
     'MI_example',
     'MOESI_CMP_directory',
     'MOESI_CMP_token',
