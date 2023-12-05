@@ -16,12 +16,12 @@ set source_dir "../src/aladdin/MachSuite"
 set simulator "gem5-cpu"
 set memory_type "cache"
 set link_width_bits 1536
-# set cpu_only 0
+set cpu_only 0
 
 # Only sweep this variable.
 sweep link_latency from 10 to 80 linstep 10
-# sweep link_width_bits from 512 to 2048 linstep 1536
-sweep cpu_only from 0 to 1 linstep 1
+sweep link_width_bits from 512 to 2048 linstep 1536
+# sweep cpu_only from 0 to 1 linstep 1
 
 source "machsuite_constants.xe"
 
